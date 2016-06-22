@@ -18,6 +18,8 @@ ADD ./start.sh /start.sh
 
 RUN chmod 755 /start.sh
 
+RUN mkdir /data
+
 EXPOSE 6379
 
 CMD ["/bin/bash", "/start.sh"]
