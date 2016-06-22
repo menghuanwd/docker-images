@@ -1,13 +1,23 @@
-FROM        ubuntu:14.04
+FROM phusion/baseimage
 
 MAINTAINER  menghuanwd "651019063@qq.com"
 
-ENV REFRESHED_AT 2016-05-23
+CMD ["/sbin/my_init"]
 
-RUN         apt-get update
+RUN apt-get update && apt-get -y upgrade
 
-RUN         apt-get install -y redis-server
+RUN apt-get install -y gcc make g++ build-essential libc6-dev tcl git
 
-EXPOSE      6379
+RUN git clone https://github.com/antirez/redis.git
 
-ENTRYPOINT   ["/usr/bin/redis-server"]
+RUN (cd /redis && make)
+
+ADD ./redis.conf /redis/redis.conf
+
+ADD ./start.sh /start.sh
+
+RUN chmod 755 /start.sh
+
+EXPOSE 6379
+
+CMD ["/bin/bash", "/start.sh"]
